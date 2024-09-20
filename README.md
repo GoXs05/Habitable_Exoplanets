@@ -4,19 +4,19 @@ This project focuses on using ML to analyze data from the NASA exoplanet archive
 
 ## Some Quick Facts
 
-'''
+```
 1. What is an exoplanet?
-'''
+```
 An exoplanet is any planet that resides outside our Solar System. Thousands of exoplanets have been discovered since the 1990s, and scientists continue to find more using space telescopes like Kepler and TESS.
 
-'''
+```
 2. What is planetary habitability and the Habitable Zone?
-'''
+```
 Planetary habitability refers to the potential of a planet to support life as we know it, especially life that requires liquid water. A habitable planet must possess the right combination of environmental conditions, including temperature, atmospheric composition, and the presence of liquid water. The Habitable Zone (AKA the Goldilocks Zone) around a star is the region where conditions are just right for liquid water to exist on a planet's surface. This depends on the star’s type, size, and luminosity.
 
-'''
+```
 3. What are the basic physics factors behind determining if a planet is habitable or not?
-'''
+```
 The mass and radius of a planet are key factors in determining its gravity, atmosphere, and potential surface conditions. They help astronomers/astrophysicists infer whether a planet could support an atmosphere and maintain liquid water. 
 
 The orbital period is the time a planet takes to complete one orbit around its host star. This affects the planet's climate and seasonal patterns, which are critical in determining habitability. For reference, Earth's orbital period around the Sun is 365.256 days.
