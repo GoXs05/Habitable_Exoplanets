@@ -8,9 +8,9 @@ from src import prep_hist_model as model
 def train_hist_gradient_boosting(print_report, test_size_input):
     habitable = 'data/habitable_exoplanets.csv'
     unhabitable = 'data/unhabitable_exoplanets.csv'
-    x, y, categorical_cols = data.prep_data(habitable, unhabitable)
+    x, y, categorical_cols, numeric_cols = data.prep_data(habitable, unhabitable)
 
-    clf = model.prep_model(categorical_cols)
+    clf = model.prep_model(categorical_cols, numeric_cols)
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test_size_input, random_state=42)
 

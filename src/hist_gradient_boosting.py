@@ -4,9 +4,9 @@ from src import prep_hist_model as model
 def classify(user_input_df):
     habitable = 'data/habitable_exoplanets.csv'
     unhabitable = 'data/unhabitable_exoplanets.csv'
-    x_train, y_train, x_test, categorical_cols = data.prep_user_data(habitable, unhabitable, user_input_df)
+    x_train, y_train, x_test, categorical_cols, numeric_cols = data.prep_user_data(habitable, unhabitable, user_input_df)
 
-    clf = model.prep_model(categorical_cols)
+    clf = model.prep_model(categorical_cols, numeric_cols)
 
     clf.fit(x_train, y_train)
 

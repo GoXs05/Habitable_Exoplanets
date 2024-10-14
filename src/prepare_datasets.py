@@ -13,8 +13,9 @@ def prep_data(habitable_data, unhabitable_data):
 
     # Handle categorical variables by converting into dummy variables
     categorical_cols = ['Planet_Type', 'Planet_Temperature_Type', 'Star_Temperature_Type']
+    numeric_cols = x.select_dtypes(include=['float64', 'int64']).columns.tolist()
 
-    return x, y, categorical_cols
+    return x, y, categorical_cols, numeric_cols
 
 def prep_user_data(habitable_data, unhabitable_data, user_df):
     habitable = pd.read_csv(habitable_data)
@@ -31,4 +32,6 @@ def prep_user_data(habitable_data, unhabitable_data, user_df):
 
     # Handle categorical variables by converting into dummy variables
     categorical_cols = ['Planet_Type', 'Planet_Temperature_Type', 'Star_Temperature_Type']
-    return x_train, y_train, x_test, categorical_cols
+    numeric_cols = x_train.select_dtypes(include=['float64', 'int64']).columns.tolist()
+
+    return x_train, y_train, x_test, categorical_cols, numeric_cols

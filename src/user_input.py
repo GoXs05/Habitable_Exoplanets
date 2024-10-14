@@ -1,6 +1,7 @@
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk, messagebox
+import numpy as np
 
 df = None
 
@@ -10,7 +11,7 @@ def submit_data():
     try:
         # Helper function to handle empty entries for numerical values
         def parse_float(entry):
-            return float(entry) if entry else None
+            return float(entry) if entry else np.nan
 
         # Collecting inputs from the UI with handling for empty/null values
         inputs = {
@@ -27,18 +28,18 @@ def submit_data():
             'Planet_Flux': parse_float(planet_flux_entry.get()),
             'Planet_Equilibrium_Temperature': parse_float(planet_eq_temp_entry.get()),
             'Planet_Surface_Temperature': parse_float(planet_surface_temp_entry.get()),
-            'Planet_Type': planet_type_var.get() if planet_type_var.get() else None,
+            'Planet_Type': planet_type_var.get() if planet_type_var.get() else np.nan,
             'Planet_Habitability_Zone_Location': parse_float(planet_habitability_zone_entry.get()),
-            'Planet_Temperature_Type': planet_temp_type_var.get() if planet_temp_type_var.get() else None,
-            'Planet_Habitability': None,
+            'Planet_Temperature_Type': planet_temp_type_var.get() if planet_temp_type_var.get() else np.nan,
+            'Planet_Habitability': np.nan,
             'Planet_Earth_Similarity_Index': parse_float(planet_esi_entry.get()),
-            'Star_Name': None,
+            'Star_Name': np.nan,
             'Star_Magnitude': parse_float(star_magnitude_entry.get()),
             'Star_Distance': parse_float(star_distance_entry.get()),
             'Star_Temperature': parse_float(star_temp_entry.get()),
             'Star_Mass': parse_float(star_mass_entry.get()),
             'Star_Radius': parse_float(star_radius_entry.get()),
-            'Star_Temperature_Type': star_temp_type_var.get() if star_temp_type_var.get() else None,
+            'Star_Temperature_Type': star_temp_type_var.get() if star_temp_type_var.get() else np.nan,
             'Star_Luminosity': parse_float(star_luminosity_entry.get()),
             'Star_Snow_Line': parse_float(star_snow_line_entry.get())
         }
@@ -55,13 +56,14 @@ def submit_data():
         
         values = [inputs[col] for col in columns]
         
-        # Update global DataFrame (use pd.NA instead of None for better handling in pandas)
-        df = pd.DataFrame([values], columns=columns).replace({None: pd.NA})
+        df = pd.DataFrame([values], columns=columns)
         
         messagebox.showinfo("Success", "Data collected successfully!")
         root.quit()
+        
     except ValueError as e:
         messagebox.showerror("Input Error", f"Invalid input: {e}")
+
 
 
 # Creating the Tkinter window
@@ -176,9 +178,11 @@ star_snow_line_entry.grid(row=24, column=1)
 submit_button = tk.Button(root, text="Submit", command=submit_data)
 submit_button.grid(row=25, column=0, columnspan=2)
 
+
+
 def run_UI():
-    # Start the Tkinter main loop
     root.mainloop()
 
+    print("Here's what you entered: ")
     print(df)
     return df
