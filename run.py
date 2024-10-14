@@ -17,5 +17,5 @@ if  __name__ == '__main__':
     if args.test:
         hgbt.train_hist_gradient_boosting(args.report, test_size_input=0.2)
     else: 
-        df = user_input.get_user_input()
+        df = user_input.run_UI()
         hgb.classify(df)
