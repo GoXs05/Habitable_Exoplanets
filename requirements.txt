@@ -1,0 +1,9 @@
+# Core model (used by run.py and the GUI)
+pandas
+scikit-learn
+
+# Interactive explorer (app/api.py)
+fastapi
+uvicorn
+shap
+joblib

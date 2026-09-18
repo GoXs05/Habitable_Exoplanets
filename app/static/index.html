@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exoplanet Habitability Explorer</title>
+<link rel="stylesheet" href="/static/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🪐</text></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-dot" aria-hidden="true"></span>
+    <h1>Exoplanet Habitability Explorer</h1>
+  </div>
+  <div class="model-stats" id="modelStats"></div>
+</header>
+
+<main class="layout">
+
+  <!-- ─────────────── Controls ─────────────── -->
+  <section class="panel controls" aria-labelledby="controlsTitle">
+    <div class="panel-head">
+      <h2 id="controlsTitle">Build a planet</h2>
+      <button type="button" class="ghost-btn" id="earthBtn" title="Set every input to Earth's values">Earth</button>
+    </div>
+    <p class="panel-sub">Sliders span the 1st–99th percentile of the training data.</p>
+
+    <div id="sliders" class="slider-stack"></div>
+
+    <div class="field">
+      <div class="field-head">
+        <label id="typeLabel">Planet type</label>
+      </div>
+      <div class="toggle-group" id="planetTypes" role="radiogroup" aria-labelledby="typeLabel"></div>
+      <p class="field-note" id="typeNote"></p>
+    </div>
+  </section>
+
+  <!-- ─────────────── Planet ─────────────── -->
+  <section class="panel planet-panel" aria-labelledby="planetTitle">
+    <div class="panel-head">
+      <h2 id="planetTitle">Your planet</h2>
+      <span class="drag-hint" id="dragHint">drag to rotate</span>
+    </div>
+
+    <div class="planet-stage">
+      <canvas id="planetCanvas" role="img"
+              aria-label="A rendered planet whose size, colour, atmosphere and rotation reflect the current input values. Drag to rotate it."></canvas>
+    </div>
+
+    <dl class="planet-legend" id="planetLegend">
+      <div><dt>Size</dt><dd data-k="radius">—</dd></div>
+      <div><dt>Surface</dt><dd data-k="temp">—</dd></div>
+      <div><dt>Atmosphere</dt><dd data-k="mass">—</dd></div>
+      <div><dt>Orbit</dt><dd data-k="period">—</dd></div>
+    </dl>
+
+    <div class="orbit-block">
+      <div class="orbit-head">
+        <h3>Orbit</h3>
+        <span class="orbit-meta" id="orbitMeta">—</span>
+      </div>
+      <canvas id="orbitCanvas" role="img"
+              aria-label="Top-down diagram of the planet orbiting its host star. The orbit's size follows Kepler's third law from the orbital period."></canvas>
+      <p class="orbit-note" id="orbitNote">
+        Orbit radius from Kepler’s third law, <code>a = (P/365.25)^⅔</code> AU,
+        assuming a 1&nbsp;M<sub>☉</sub> host. Lap time is compressed to be watchable.
+        The globe’s own rotation is a viewing aid — a planet’s day and its year are
+        independent, and the archive records no rotation period.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────── Result ─────────────── -->
+  <section class="panel result" aria-labelledby="resultTitle">
+    <div class="panel-head">
+      <h2 id="resultTitle">Predicted habitability</h2>
+      <span class="status-chip" id="statusChip">ready</span>
+    </div>
+
+    <div class="dial-row">
+      <div class="dial-wrap">
+        <svg class="dial" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="dial-track" cx="60" cy="60" r="52"/>
+          <circle class="dial-value" id="dialValue" cx="60" cy="60" r="52"/>
+        </svg>
+        <div class="dial-centre">
+          <span class="prob-number" id="probNumber">—</span>
+          <span class="prob-unit">%</span>
+        </div>
+      </div>
+      <div class="verdict">
+        <span class="verdict-label" id="verdictLabel">Awaiting input</span>
+        <p class="verdict-note" id="verdictNote">
+          Probability from <code>predict_proba</code>.
+        </p>
+      </div>
+    </div>
+
+    <div class="shap">
+      <div class="shap-head">
+        <h3>What drove this prediction</h3>
+        <span class="shap-base" id="shapBase"></span>
+      </div>
+      <ul class="shap-list" id="shapList"></ul>
+      <p class="shap-foot">
+        Exact Shapley values over the five inputs. Contributions sum to
+        probability − baseline.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────── Plot ─────────────── -->
+  <section class="panel plot-panel" aria-labelledby="plotTitle">
+    <div class="panel-head">
+      <h2 id="plotTitle">Habitability across period &amp; temperature</h2>
+      <label class="switch">
+        <input type="checkbox" id="liveSurface" checked>
+        <span>Surface follows mass / radius / type</span>
+      </label>
+    </div>
+    <p class="panel-sub" id="plotSub"></p>
+
+    <div class="canvas-wrap">
+      <canvas id="plot" role="img"
+              aria-label="Model-predicted habitability across orbital period and surface temperature, with real exoplanets plotted as points."></canvas>
+      <div class="tooltip" id="tooltip" hidden></div>
+    </div>
+
+    <div class="legend-row">
+      <div class="legend-group">
+        <span class="legend-title">P(habitable)</span>
+        <span class="ramp" aria-hidden="true"></span>
+        <span class="ramp-ends"><i>0</i><i>1</i></span>
+      </div>
+      <div class="legend-group">
+        <span class="key key-dot"></span><span class="key-text">Archive planet</span>
+        <span class="key key-hab"></span><span class="key-text">Known habitable</span>
+        <span class="key key-you"></span><span class="key-text">Your planet</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <span id="footNote"></span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+<script src="/static/planet.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
